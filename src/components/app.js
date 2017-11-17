@@ -4,6 +4,7 @@ import Header from './header';
 import { Button, Icon } from 'preact-mdl'
 import MapContainer from './maps';
 import CameraModal from './cameraModal';
+import { database } from 'PinPic/service/firebase'
 
 export default class App extends Component {
     constructor(props) {
@@ -24,6 +25,16 @@ export default class App extends Component {
 
     setPicture(picture) {
         this.img.src = URL.createObjectURL(picture);
+        const datetime = new Date();
+        database.ref('pins').push({
+            datetime: datetime.toString(),
+            location: {
+                lat: 48.8684921,
+                lng: 2.3174882
+            },
+            name: "Hello Theodo!",
+            pictureSrc: this.img.src
+        });
     }
 
     render() {
