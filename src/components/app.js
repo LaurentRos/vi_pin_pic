@@ -4,15 +4,28 @@ import Header from './header';
 import { Button, Icon } from 'preact-mdl'
 import MapContainer from './maps';
 import CameraModal from './cameraModal';
+import { database } from 'PinPic/service/firebase'
 
 export default class App extends Component {
     constructor(props) {
         super(props);
         this.setState({
             isCameraModalOpen: false,
+            pin: {
+                name: "Hello!"
+            }
         })
         this.toggleCameraModal = this.toggleCameraModal.bind(this);
         this.setPicture = this.setPicture.bind(this);
+    }
+
+    componentDidMount() {
+        const pinsRef = database.ref("pins/Theodo");
+        let self = this;
+
+        pinsRef.on('value', (snapshot) => {
+            self.setState({ pin: snapshot.val() });
+        });
     }
 
     toggleCameraModal() {
@@ -24,6 +37,16 @@ export default class App extends Component {
 
     setPicture(picture) {
         this.img.src = URL.createObjectURL(picture);
+        const datetime = new Date();
+        database.ref('pins/Theodo').set({
+            datetime: datetime.toString(),
+            location: {
+                lat: 48.8684921,
+                lng: 2.3174882
+            },
+            name: "Hello Theodo!",
+            pictureSrc: this.img.src
+        });
     }
 
     render() {
@@ -37,7 +60,9 @@ export default class App extends Component {
                             this.img = img;
                         }}
                     />
-                    <MapContainer />
+                    <MapContainer
+                        pinName={this.state.pin.name}
+                    />
                 </div>
                 <CameraModal
                     isModalOpen={this.state.isCameraModalOpen}

@@ -15,6 +15,10 @@ class MapContainer extends Component {
         this.onMapClicked = this.onMapClicked.bind(this);
     }
     
+    static defaultProps = {
+        pinName: "Hello!",
+    };
+
     onMarkerClick = (props, marker, e) => {
         this.setState({
             selectedPlace: props,
@@ -45,7 +49,7 @@ class MapContainer extends Component {
             >
                 <Marker
                     onClick={this.onMarkerClick}
-                    name={'PWA Paris'}
+                    name={this.props.pinName}
                     position={{lat: 48.8827176, lng: 2.3202777}}
                 />
 
