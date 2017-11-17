@@ -11,9 +11,21 @@ export default class App extends Component {
         super(props);
         this.setState({
             isCameraModalOpen: false,
+            pin: {
+                name: "Hello!"
+            }
         })
         this.toggleCameraModal = this.toggleCameraModal.bind(this);
         this.setPicture = this.setPicture.bind(this);
+    }
+
+    componentDidMount() {
+        const pinsRef = database.ref("pins/Theodo");
+        let self = this;
+
+        pinsRef.on('value', (snapshot) => {
+            self.setState({ pin: snapshot.val() });
+        });
     }
 
     toggleCameraModal() {
@@ -26,7 +38,7 @@ export default class App extends Component {
     setPicture(picture) {
         this.img.src = URL.createObjectURL(picture);
         const datetime = new Date();
-        database.ref('pins').push({
+        database.ref('pins/Theodo').set({
             datetime: datetime.toString(),
             location: {
                 lat: 48.8684921,
@@ -48,7 +60,9 @@ export default class App extends Component {
                             this.img = img;
                         }}
                     />
-                    <MapContainer />
+                    <MapContainer
+                        pinName={this.state.pin.name}
+                    />
                 </div>
                 <CameraModal
                     isModalOpen={this.state.isCameraModalOpen}
