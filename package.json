@@ -23,6 +23,7 @@
     "preact-cli": "^2.0.0"
   },
   "dependencies": {
+    "firebase": "^4.6.2",
     "google-maps-react": "^1.1.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
